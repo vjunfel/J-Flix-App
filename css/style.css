@@ -339,6 +339,15 @@ section h2 {
   background: red;
 }
 
+.footer-info{
+  display: flex;
+}
+.copyright{
+  display: flex;
+  margin: .5rem 0;
+}
+
+
 @media (max-width: 720px){
   .details-top{
   display: flex;
@@ -351,5 +360,8 @@ section h2 {
   .details-top img{
     margin:auto;
     width: 100%;
+  }
+  .footer-info{
+    flex-direction: column;
   }
 }
