@@ -90,7 +90,9 @@ async function displayMovieDetails() {
 	<div>
 	  ${
 			movie.poster_path
-				? `<img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" class="card-img-top" alt="${movie.title}" />`
+				? `<a href='${movie.homepage}' target='_blank'>
+					<img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" class="card-img-top" alt="${movie.title}" />
+					</a>`
 				: `<img
 		src="../images/no-image.jpg"
 		class="card-img-top"
@@ -138,6 +140,76 @@ async function displayMovieDetails() {
   </div>`;
 
 	document.querySelector('#movie-details').appendChild(div);
+}
+
+// Display TV Show Details
+async function displayShowDetails() {
+	const showId = window.location.search.split('=')[1];
+
+	const show = await fetchAPIData(`tv/${showId}`);
+
+	console.log(show);
+
+	// Overlay for background image
+	displayBackgroundImage('tv', show.backdrop_path);
+
+	const div = document.createElement('div');
+	div.innerHTML = `<div class="details-top">
+	<div>
+	  ${
+			show.poster_path
+				? `<a href='${show.homepage}' target='_blank'>
+					<img src="https://image.tmdb.org/t/p/w500${show.poster_path}" class="card-img-top" alt="${show.name}" />
+					</a>`
+				: `<img
+		src="../images/no-image.jpg"
+		class="card-img-top"
+		alt="${show.name}"
+	/>`
+		}
+	</div>
+	<div>
+	  <h2>${show.name}</h2>
+	  <p>
+		<i class="fas fa-star text-primary"></i>
+		${show.vote_average.toFixed(1)} / 10
+	  </p>
+	  <p class="text-muted">Air Date: ${show.last_air_date}</p>
+	  <p>
+		${show.overview}
+	  </p>
+	  <h5>GENRES:</h5>
+	  <ul class="list-group">
+		${show.genres.map((genre) => `<li>${genre.name}</li>`).join('')}
+	  </ul>
+	  <a href="${show.homepage}" target="_blank" class="btn">Visit show Homepage</a>
+	</div>
+  </div>
+  <div class="details-bottom">
+	<h2>show Info</h2>
+	<ul>
+	  <li><span class="text-secondary">Number of Episodes: </span>${
+			show.number_of_episodes
+		}</li>
+	  <li><span class="text-secondary">Name of Current Episode: </span>${
+			show.last_episode_to_air.name
+		}</li>
+	  <li><span class="text-secondary">Popularity: </span>${addCommasToNumber(
+			show.popularity.toFixed()
+		)}</li>
+	  <li><span class="text-secondary">Country: </span> ${
+			show.production_countries[0].name
+		}</li>
+	</ul>
+	<h4>Production Companies</h4>
+	<div class="list-group">
+		${show.production_companies
+			.map((company) => `<span>${company.name}</span>`)
+			.join(', ')}
+	</div>
+  </div>`;
+
+	document.querySelector('#show-details').appendChild(div);
 }
 
 // Display Backdrop On Details Pages
@@ -205,8 +277,8 @@ function init() {
 		case '/movie-details.html':
 			displayMovieDetails();
 			break;
-		case '/tv-details.html':
-			console.log('TV Details');
+		case '/show-details.html':
+			displayShowDetails();
 			break;
 		case '/search.hmtl':
 			console.log('Search');

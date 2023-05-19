@@ -145,7 +145,7 @@ ul {
 .main-footer {
   background: #020d18;
   padding: 20px 0;
-  margin-top: 20px;
+  margin-top: 50px;
 }
 
 .main-footer .container {
@@ -218,7 +218,7 @@ section h2 {
 /* Movie Details */
 .details-top {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   margin: 50px 0 30px;
 }
@@ -236,9 +236,6 @@ section h2 {
 
 .details-top .btn {
   margin-top: 20px;
-}
-
-.details-bottom {
 }
 
 .details-bottom li {
@@ -340,4 +337,19 @@ section h2 {
 
 .alert-error {
   background: red;
+}
+
+@media (max-width: 720px){
+  .details-top{
+  display: flex;
+  flex-direction:column;
+  margin: 50px 0px;
+  }
+  .details-top div{
+    margin: 0;
+  }
+  .details-top img{
+    margin:auto;
+    width: 100%;
+  }
 }
