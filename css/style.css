@@ -325,10 +325,10 @@ section h2 {
 
 /* Alert */
 .alert {
-  background: red;
   padding: 10px 20px;
-  margin-bottom: 20px;
+  margin-top: 20px;
   border-radius: 5px;
+  color: rgb(202, 5, 5);
 }
 
 .alert-success {

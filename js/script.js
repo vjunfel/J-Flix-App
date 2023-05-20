@@ -1,15 +1,69 @@
 const global = {
 	currentPage: window.location.pathname,
+	search: {
+		term: '',
+		type: '',
+		page: 1,
+		totalPages: 1,
+	},
+	api: {
+		// Register your key at https://www.themoviedb.org/settings/api and enter here
+		// Only use this for development or very projects. You should store your key and make request from a server.
+		apiKey: '8e67bb99873b039127de01ef403220f4',
+		apiUrl: 'https://api.themoviedb.org/3/',
+	},
 };
 
 // Highlight active link
-function hightlightActiveLink() {
+function highlightActiveLink() {
 	const links = document.querySelectorAll('.nav-link');
 	links.forEach((link) => {
 		if (link.getAttribute('href') === global.currentPage) {
 			link.classList.add('active');
 		}
 	});
+}
+
+// Search Movies / Shows
+async function search() {
+	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+
+	global.search.type = urlParams.get('type');
+	global.search.term = urlParams.get('search-term');
+
+	if (global.search.term !== '' && global.search.term !== null) {
+		const results = await searchAPIData();
+		console.log(results);
+	} else {
+		showAlert('* Please Enter Search Keyword');
+	}
+}
+
+// Make Request to Search
+async function searchAPIData() {
+	const API_KEY = global.api.apiKey;
+	const API_URL = global.api.apiUrl;
+
+	showSpinner();
+
+	const response = await fetch(
+		`${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}`
+	);
+
+	const data = await response.json();
+	hideSpinner();
+	return data;
+}
+
+// Show Alert
+function showAlert(message, className) {
+	const alertEl = document.createElement('div');
+	alertEl.classList.add('alert', className);
+	alertEl.appendChild(document.createTextNode(message));
+	document.querySelector('#alert').appendChild(alertEl);
+
+	setTimeout(() => alertEl.remove(), 3000);
 }
 
 // Display Now Playing Movie Slider
@@ -45,10 +99,10 @@ function initSwiper() {
 			disableOnInteraction: false,
 		},
 		breakpoints: {
-			500: {
+			600: {
 				slidesPerView: 2,
 			},
-			700: {
+			800: {
 				slidesPerView: 3,
 			},
 			1200: {
@@ -283,10 +337,8 @@ function displayBackgroundImage(type, backgroundPath) {
 
 // Fetch data from TMDB API
 async function fetchAPIData(endpoint) {
-	// Register your key at https://www.themoviedb.org/settings/api and enter here
-	// Only use this for development or very projects. You should store your key and make request from a server.
-	const API_KEY = '8e67bb99873b039127de01ef403220f4';
-	const API_URL = 'https://api.themoviedb.org/3/';
+	const API_KEY = global.api.apiKey;
+	const API_URL = global.api.apiUrl;
 
 	showSpinner();
 
@@ -328,12 +380,12 @@ function init() {
 		case '/show-details.html':
 			displayShowDetails();
 			break;
-		case '/search.hmtl':
-			console.log('Search');
+		case '/search.html':
+			search();
 			break;
 	}
 
-	hightlightActiveLink();
+	highlightActiveLink();
 }
 
 window.addEventListener('DOMContentLoaded', init);
