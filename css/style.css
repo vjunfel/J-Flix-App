@@ -324,7 +324,7 @@ section h2 {
 }
 
 /* Alert */
-.alert {
+.alert-error {
   padding: 10px 20px;
   margin-top: 20px;
   border-radius: 5px;
@@ -332,23 +332,23 @@ section h2 {
 }
 
 .alert-success {
-  background: green;
-}
-
-.alert-error {
-  background: red;
+  color: green;
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-weight: 700;
 }
 
 .footer-info{
   display: flex;
 }
+
 .copyright{
   display: flex;
   margin: .5rem 0;
 }
 
-
-@media (max-width: 720px){
+/* Mobile Device Display */
+@media (max-width: 768px){
   .details-top{
   display: flex;
   flex-direction:column;
