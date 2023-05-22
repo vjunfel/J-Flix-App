@@ -316,7 +316,10 @@ section h2 {
 }
 
 .pagination {
+  display: flex;
+  justify-content: space-between;
   margin-top: 20px;
+  padding-bottom: 30px;
 }
 
 .page-counter {

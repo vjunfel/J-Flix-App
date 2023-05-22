@@ -40,9 +40,9 @@
         <form action="/search.html" class="search-form">
           <div class="search-radio">
             <input type="radio" id="movie" name="type" value="movie" checked />
-            <label for="movies">Movies</label>
+            <label for="movie">Movies</label>
             <input type="radio" id="tv" name="type" value="tv" />
-            <label for="shows">TV Shows</label>
+            <label for="tv">TV Shows</label>
           </div>
           <div class="search-flex">
             <input
@@ -64,15 +64,8 @@
     <section id="search-results-wrapper" class="container">
       <heading id="search-results-heading"></heading>
       <div id="search-results" class="grid"></div>
-        
-      <div id="pagination">
-        <div class="pagination">
-          <button class="btn btn-primary" id="prev">Prev</button>
-          <button class="btn btn-primary" id="next">Next</button>
-          <div class="page-counter">Page 1 of 5</div>
-        </div>
-      </div>
-    </section>
+      <div id="pagination"></div>
+    </section> 
 
     <!-- Footer -->
     <footer class="main-footer">
@@ -81,7 +74,7 @@
         <div class="copyright">
           <span>  © 2023 </span>
           <span> &nbsp; | &nbsp; </span>
-          <span> Junfel Velasco </span>
+          <span> <a href="https://junfelv.com" target="_blank">Junfel Velasco</a> </span>
         </div>
         <div class="social-links">
           <a href="https://www.facebook.com" target="_blank"

@@ -5,6 +5,7 @@ const global = {
 		type: '',
 		page: 1,
 		totalPages: 1,
+		totalResults: 0,
 	},
 	api: {
 		// Register your key at https://www.themoviedb.org/settings/api and enter here
@@ -33,16 +34,18 @@ async function search() {
 	global.search.term = urlParams.get('search-term');
 
 	if (global.search.term !== '' && global.search.term !== null) {
-		const {results, total_pages, page} = await searchAPIData();
+		const {results, total_pages, page, total_results} = await searchAPIData();
+
+		global.search.page = page;
+		global.search.totalPages = total_pages;
+		global.search.totalResults = total_results;
 
 		if (results.length === 0) {
 			showAlert('No Results Found!', 'alert-error');
 			return;
 		} 
-
 		displaySearchResults(results);
 
-		showAlert('Success!', 'alert-success');
 	} else {
 		showAlert('* Please Enter Search Keyword', 'alert-error');
 	}
@@ -56,7 +59,7 @@ async function searchAPIData() {
 	showSpinner();
 
 	const response = await fetch(
-		`${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}`
+		`${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}&page=${global.search.page}`
 	);
 
 	const data = await response.json();
@@ -66,7 +69,10 @@ async function searchAPIData() {
 
 // Display Search Results
 function displaySearchResults(results) {
-	// const { results } = await fetchAPIData('result/popular');
+	// Clear previous results
+	document.querySelector('#search-results').innerHTML = '';
+	document.querySelector('#search-results-heading').innerHTML = '';
+	document.querySelector('#pagination').innerHTML = '';
 
 	results.forEach((result) => {
 		const div = document.createElement('div');
@@ -87,10 +93,53 @@ function displaySearchResults(results) {
 					<small class="text-muted">Release: ${ global.search.type === 'movie' ? result.release_date : result.first_air_date}</small>
 				</p>
         	</div>`;
+ 
+			// <h2> ${results.length} of ${total_results}</h2> 
+		document.querySelector('#search-results-heading').innerHTML = `
+			<h2> ${results.length} of ${global.search.totalResults} Results for ${global.search.term}</h2> 
+		`;
 
-		document.querySelector('#search-results').appendChild(div);
+		document.querySelector('#search-results').appendChild(div); 
 	});
+
+	displayPagination();
 }
+
+// Create And Diplay Pagination For Search
+function displayPagination() {
+	const div = document.createElement('div');
+	div.classList.add('pagination');
+	div.innerHTML = `
+		<button class='btn btn-primary' id='prev'> Prev </button>
+		<div class='page-counter'> Page ${global.search.page} of ${global.search.totalPages}</div>
+		<button class='btn btn-primary' id='next'> Next </button>
+		`;
+		// <div class='page-counter'> Page ${page} of ${total_pages}</div>
+
+	document.querySelector('#pagination').appendChild(div);
+
+	// Disable prev button if on first page
+	if (global.search.page === 1) {
+		document.querySelector('#prev').disabled = true;
+	};
+
+	// Disable next button if on last page
+	if (global.search.page === global.search.totalPages) {
+		document.querySelector('#next').disabled = true;
+	};
+
+	document.querySelector('#next').addEventListener('click', async () => {
+		global.search.page++;
+		const { results } = await searchAPIData();
+		displaySearchResults(results);
+	})
+
+	document.querySelector('#prev').addEventListener('click', async () => {
+		global.search.page--;
+		const { results } = await searchAPIData();
+		displaySearchResults(results);
+	})
+} 
 
 // Show Alert
 function showAlert(message, className) {
